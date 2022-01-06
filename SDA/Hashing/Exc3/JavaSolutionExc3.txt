@@ -1,0 +1,26 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
+        String firstString = scanner.readLine();
+        String secondString = scanner.readLine();
+
+        long[][] dp = new long[2][1000000];
+        long result = 0;
+
+        for (int i = 1; i <= firstString.length(); i++) {
+            for (int j = 1; j <= secondString.length(); j++) {
+                if (firstString.charAt(i - 1) == secondString.charAt(j - 1)) {
+                    dp[i % 2][j] = dp[(i - 1) % 2][j - 1] + 1;
+                    if (dp[i % 2][j] > result)
+                        result = dp[i % 2][j];
+                } else dp[i % 2][j] = 0;
+            }
+        }
+        System.out.println(result);
+    }
+}

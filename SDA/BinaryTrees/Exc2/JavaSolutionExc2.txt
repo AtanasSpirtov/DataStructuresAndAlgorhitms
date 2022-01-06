@@ -1,0 +1,150 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Solution {
+
+    public static class Node {
+        int data;
+        Node left, right;
+
+        public Node(int data) {
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    public static class BinaryTree {
+        Node root = new Node(0);
+
+        public void insert(int data, int data2) {
+            insert(this.root, data, data2);
+        }
+
+        static void insert(Node temp, int key1, int key2) {
+            Queue<Node> q = new LinkedList<>();
+            q.add(temp);
+
+            while (!q.isEmpty()) {
+                temp = q.peek();
+                q.remove();
+                if (temp == null) {
+                    continue;
+                }
+
+                if (temp.left == null && temp.data != -1) {
+                    temp.left = new Node(key1);
+                    temp.right = new Node(key2);
+                    break;
+                } else
+                    q.add(temp.left);
+
+                if (temp.right == null && temp.data != -1) {
+                    temp.right = new Node(key1);
+                    temp.left = new Node(key2);
+                    break;
+                } else
+                    q.add(temp.right);
+            }
+        }
+
+        static class pair {
+            Node first;
+            int second;
+
+            pair() {
+            }
+
+            pair(Node i, Integer j) {
+                first = i;
+                second = j;
+            }
+        }
+
+        static TreeMap<Integer, pair> m = new TreeMap<>();
+
+        void topView() {
+
+            Queue<pair> q = new ArrayDeque<>();
+
+            q.offer(new pair(root, 0));
+
+
+            int hd = 0, l = 0, r = 0;
+
+            Stack<Integer> left = new Stack<>();
+
+            Vector<Integer> right = new Vector<>();
+
+            Node node;
+
+            while (q.size() != 0) {
+
+                node = q.element().first;
+                hd = q.element().second;
+
+                if (hd < l) {
+                    left.push(node.data);
+                    l = hd;
+                } else if (hd > r) {
+                    right.add(node.data);
+                    r = hd;
+                }
+
+                if (node.left != null) {
+                    q.add(new pair(node.left, hd - 1));
+                }
+                if (node.right != null) {
+                    q.add(new pair(node.right, hd + 1));
+                }
+
+                q.poll();
+            }
+            StringBuilder builder = new StringBuilder();
+            while (left.size() != 0) {
+                builder.append(left.peek()).append(" ");
+                left.pop();
+            }
+            builder.append(root.data).append(" ");
+            for (Integer x : right) {
+                builder.append(x).append(" ");
+            }
+            System.out.println(builder);
+        }
+
+    static Node deleteMinusNode(Node root) {
+        if (root == null) {
+            return null;
+        }
+        if (root.data == -1) {
+            return null;
+        }
+
+        root.left = deleteMinusNode(root.left);
+        root.right = deleteMinusNode(root.right);
+
+        return root;
+    }
+
+    public void deleteMinus() {
+        deleteMinusNode(root);
+    }
+
+}
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
+        int number = Integer.parseInt(scanner.readLine());
+        BinaryTree tree = new BinaryTree();
+
+        for (int i = 0; i < number; i++) {
+            String[] current = scanner.readLine().split(" ");
+            tree.insert(Integer.parseInt(current[0]), Integer.parseInt(current[1]));
+        }
+        tree.deleteMinus();
+        tree.topView();
+    }
+}

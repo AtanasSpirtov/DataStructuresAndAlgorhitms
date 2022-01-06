@@ -1,0 +1,50 @@
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+
+public class Solution {
+
+    static Set<Integer> set = new HashSet<>();
+    static int globalSize = 10;
+    static void printTheArray(int[] arr, int n)
+    {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < Integer.toBinaryString(n).length(); i++)
+        {
+            builder.append(arr[i]);
+        }
+        int num  = Integer.parseInt(builder.toString(), 2);
+        set.add(num);
+    }
+    static void generateAllBinaryStrings(int n, int[] arr, int i)
+    {
+        if (i == Integer.toBinaryString(n).length())
+        {
+            printTheArray(arr, n);
+            return;
+        }
+        if(Integer.toBinaryString(n).charAt(i) == '0')
+        {
+            arr[i] = 0;
+            generateAllBinaryStrings(n , arr , i + 1);
+        }
+        else {
+            arr[i] = 0;
+            generateAllBinaryStrings(n, arr, i + 1);
+            arr[i] = 1;
+            generateAllBinaryStrings(n, arr, i + 1);
+        }
+    }
+    public static void main(String args[])
+    {
+        Scanner scanner = new Scanner(System.in);
+        int size = Integer.parseInt(scanner.nextLine());
+        int[] arr = new int[1000000];
+        for (int i = 0; i < size; i++) {
+            int number = scanner.nextInt();
+            generateAllBinaryStrings(number, arr, 0);
+            globalSize = Integer.toBinaryString(number).length();
+        }
+        System.out.println(set.size());
+    }
+}

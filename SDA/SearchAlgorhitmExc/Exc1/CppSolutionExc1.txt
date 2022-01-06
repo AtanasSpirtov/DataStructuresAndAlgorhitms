@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+double cubeRoot(unsigned long long n)
+    {
+        double x = n;
+
+        double cube;
+
+        int count = 0;
+
+        while (true)
+        {
+            count++;
+
+            cube = (1 + 0.0) / 3 * (2 * x + (n / (x * x)));
+
+            if (abs(cube - x) < 0.1)
+                break;
+
+            x = cube;
+        }
+
+        return cube;
+    }
+int main(){
+     unsigned long long n;
+    cin >> n;
+
+    unsigned long long count = 0;
+    while (n != 0) {
+        n -= ((unsigned long long)cubeRoot(n)) * ((unsigned long long)cubeRoot(n)) * ((unsigned long long)cubeRoot(n));
+        count += 1;
+    }
+    cout << count;
+}

@@ -1,0 +1,28 @@
+import java.io.*;
+        import java.util.*;
+        import java.text.*;
+        import java.math.*;
+        import java.util.regex.*;
+
+        public class Solution {
+            public static void main(String args[] ) throws Exception {
+                Scanner scanner = new Scanner(System.in);
+        String inputText = scanner.nextLine();
+        int numberOfRepeating = Integer.parseInt(scanner.nextLine());
+        char symbol = scanner.next().charAt(0);
+        int inputTextCounter = 0;
+        int matchCounter = 0;
+        for (int i = 0; i < numberOfRepeating; i++) {
+            if(inputTextCounter == inputText.length())
+            {
+                inputTextCounter = 0;
+            }
+            if(inputText.charAt(inputTextCounter) == symbol)
+            {
+                matchCounter++;
+            }
+            inputTextCounter++;
+        }
+        System.out.println(matchCounter);
+            }
+        }

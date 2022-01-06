@@ -1,0 +1,49 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
+
+        int nodes = Integer.parseInt(scanner.readLine());
+        int edges = nodes - 1;
+
+        ArrayList<ArrayList<Integer>> tree = new ArrayList<>(nodes);
+        int[] output = new int[nodes];
+
+        for (int i = 0; i < nodes; i++) {
+            ArrayList<Integer> current = new ArrayList<>();
+            tree.add(current);
+        }
+
+        while (edges != 0) {
+            String[] current = scanner.readLine().split(" ");
+            int boss = Integer.parseInt(current[0]);
+            int child = Integer.parseInt(current[1]);
+            tree.get(boss).add(child);
+
+            edges -= 1;
+        }
+        int ds = findGiftsNumber(0, tree, output);
+
+
+        StringBuilder outputString = new StringBuilder();
+        outputString.append(ds - 1).append(" ");
+        for (int i = 1; i < output.length; i++) {
+
+            outputString.append(output[i] - 1).append(" ");
+        }
+        System.out.println(outputString);
+
+    }
+
+    private static int findGiftsNumber(int val, ArrayList<ArrayList<Integer>> list, int[] output) {
+
+        output[val] = 1;
+        for (int node : list.get(val)) {
+            output[val] += findGiftsNumber(node, list, output);
+        }
+        return output[val];
+    }
+}

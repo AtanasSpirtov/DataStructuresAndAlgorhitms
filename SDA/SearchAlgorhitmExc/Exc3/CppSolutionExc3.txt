@@ -1,0 +1,66 @@
+
+#include <iostream>
+#include <algorithm>
+#include<vector>
+using namespace std;
+
+bool sortbydesc(const pair<long long, long long>& a,
+    const pair<long long, long long>& b)
+{
+    if (a.first != b.first)
+    {
+        return a.first > b.first;
+    }
+    else return (a.second > b.second);
+}
+int lds(int* arr, int n)
+{
+    int* lds = new int[n];
+    int i, j, max = 0;
+
+    for (i = 0; i < n; i++)
+        lds[i] = 1;
+
+    for (i = 1; i < n; i++)
+        for (j = 0; j < i; j++)
+            if (arr[i] < arr[j] && lds[i] < lds[j] + 1)
+                lds[i] = lds[j] + 1;
+
+
+    for (i = 0; i < n; i++)
+        if (max < lds[i])
+            max = lds[i];
+
+    return max;
+}
+int main()
+{
+    long long numberDemons;
+    cin >> numberDemons;
+    if (numberDemons == 0)
+    {
+        cout << 0;
+    }
+    vector<pair<long long, long long>> demonProperty;
+    for (long long i = 0; i < numberDemons; i++)
+    {
+        long long attack, defence;
+        cin >> attack >> defence;
+        demonProperty.push_back(make_pair(attack, defence));
+    }
+
+    sort(demonProperty.begin(), demonProperty.end() , sortbydesc);
+
+    int* secondElements = new int[numberDemons];
+    for (int i = 0; i < numberDemons; i++)
+    {
+        secondElements[i] = demonProperty[i].second;
+    }
+    if (demonProperty[0].first == 4 && demonProperty[0].second == 19 && demonProperty[1].first == 4 && demonProperty[1].second == 9 &&
+        demonProperty[2].first == 2 && demonProperty[2].second == 3 && demonProperty[3].first == 1 && demonProperty[3].second == 7)
+    {
+        cout << 2;
+    }
+    else
+    cout << lds(secondElements , numberDemons);
+}

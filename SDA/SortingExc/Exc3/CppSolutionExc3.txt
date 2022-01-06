@@ -1,0 +1,56 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+int main() {
+int number;
+    cin >> number;
+    char* numbers = new char[number];
+    for (int i = 0; i < number; i++)
+    {
+        cin >> numbers[i];
+    }
+    for (int i = 0; i < number; i++) {
+        if (numbers[i] >= 48 && numbers[i] <= 57)
+        {
+            numbers[i] = (char)(numbers[i] - 47);
+        }
+        else if (numbers[i] >= 65 && numbers[i] <= 90)
+        {
+            numbers[i] = (char)(numbers[i] - 28);
+        }
+        else if (numbers[i] >= 97 && numbers[i] <= 122)
+        {
+            numbers[i] = (char)(numbers[i] - 86);
+        }
+    }
+    sort(numbers, numbers + number);
+    for (int i = 0; i < number; i++)
+    {
+        if (numbers[i] > 62)
+        {
+            exit(-1);
+        }
+    }
+    for (int i = 0; i < number; i++) {
+        if (numbers[i] >= 1 && numbers[i] <= 10)
+        {
+            numbers[i] = (char)(numbers[i] + 47);
+        }
+        else if (numbers[i] >= 10 && numbers[i] <= 36)
+        {
+            numbers[i] = (char)(numbers[i] + 86);
+        }
+        else if (numbers[i] >= 37 && numbers[i] <= 62)
+        {
+            numbers[i] = (char)(numbers[i] + 28);
+        }
+    }
+    for (int i = 0; i < number; i++) {
+        cout << numbers[i];
+    }    return 0;
+}

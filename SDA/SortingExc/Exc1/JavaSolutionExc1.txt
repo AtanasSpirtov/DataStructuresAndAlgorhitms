@@ -1,0 +1,55 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    static void swap(long[] arr, long i, long j)
+        {
+            long temp = arr[(int) i];
+            arr[(int) i] = arr[(int) j];
+            arr[(int) j] = temp;
+        }
+        static int partition(long[] arr, int low, long high)
+        {
+
+            long pivot = arr[(int) high];
+            int i = (low - 1);
+
+            for(int j = low; j <= high - 1; j++)
+            {
+                if (arr[j] < pivot)
+                {
+                    i++;
+                    swap(arr, i, j);
+                }
+            }
+            swap(arr, i + 1, high);
+            return (i + 1);
+        }
+        static void quickSort(long[] arr, int low, long high)
+        {
+            if (low < high)
+            {
+                int pi = partition(arr, low, high);
+                quickSort(arr, low, pi - 1);
+                quickSort(arr, pi + 1, high);
+            }
+        }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        long number = Integer.parseInt(scanner.nextLine());
+        String[] input = scanner.nextLine().split(" ");
+        int customers = Integer.parseInt(scanner.nextLine());
+        long[] parseInput = new long[(int) number];
+        for (int i = 0; i < number; i++) {
+            parseInput[i] = Integer.parseInt(input[i]);
+        }
+        quickSort(parseInput , 0 , number-1);
+        long sum = 0;
+        for (int i = 0; i < customers; i++) {
+            sum = sum + parseInput[i];
+        }
+        System.out.println(sum);
+    }
+}

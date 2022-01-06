@@ -1,0 +1,47 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] sequence = scanner.nextLine().split("");
+        String target = scanner.nextLine();
+        int[] result = new int[sequence.length];
+
+        int prev = -1;
+        int next = 0;
+
+        for (int i = 0; i < sequence.length; i++) {
+
+            if (sequence[i].equals(target)) {
+                if (prev == -1) {
+                    next = i;
+                    for (int j = i - 1; j >= 0 ; j--) {
+                        result[j] = next - j;
+                    }
+                    prev = next;
+                    continue;
+                }
+                next = i;
+                for (int j = next - 1; j > prev; j--) {
+                    int rightDistance = next - j;
+                    int leftDistance = j - prev;
+                    result[j] = Math.min(leftDistance, rightDistance);
+                }
+                prev = next;
+            }
+
+            if (i == sequence.length - 1) {
+                for (int j = i; j > prev ; j--) {
+                    result[j] = j - prev;
+                }
+            }
+
+        }
+
+        for (int i = 0; i < result.length; i++) {
+            System.out.print(result[i] + " ");
+        }
+    }
+}

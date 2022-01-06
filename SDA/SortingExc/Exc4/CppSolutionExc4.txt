@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+bool sortByFirstAndSecDesc(const pair<double, pair<double , int> > & a,
+    const pair<double, pair<double, int> >& b)
+{
+    if (a.first != b.first)
+    {
+        return a.first > b.first;
+    }
+    else return a.second.first > b.second.first;
+}
+
+int main()
+{
+    vector< pair <double, pair <double , int >> >vect;
+    int number;
+    cin >> number;
+    double* arr = new double[number];
+    double* arr1 = new double[number];
+    for (int i = 0; i < number; i++){
+        cin >> arr[i] >> arr1[i];
+        vect.push_back(make_pair( (double)((arr[i] * arr[i])/(4 * arr1[i])) , make_pair (arr[i] , i + 1 )));
+    }
+    sort(vect.begin(), vect.end() , sortByFirstAndSecDesc);
+
+
+    int k = -1;
+    for (int i = 0; i < number; i++)
+    {
+        cout << vect[i].second.second << " ";
+    }
+
+}

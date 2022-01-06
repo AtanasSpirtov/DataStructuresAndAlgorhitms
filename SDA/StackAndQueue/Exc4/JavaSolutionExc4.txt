@@ -1,0 +1,49 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(System.in));
+
+
+//        Scanner scanner = new Scanner(System.in);
+
+        int size = Integer.parseInt(String.valueOf(reader.readLine()));
+        String line = reader.readLine(); // to read multiple integers line
+        String[] arguments = line.split("\\s+");
+        Deque<Integer> competition = new ArrayDeque<>();
+
+        for (int i = 0; i < size; i++) {
+            int current = Integer.parseInt(arguments[i]);
+            competition.offer(current);
+        }
+
+        int prevSize = size;
+        int rounds = 0;
+        while (true) {
+            int prevPlayer = Integer.MAX_VALUE;
+            for (int i = 0; i < size; i++) {
+                if (!competition.isEmpty()) {
+                    int current = competition.poll();
+                    if (current <= prevPlayer) {
+                        competition.offer(current);
+
+                    }
+                    prevPlayer = current;
+                }
+            }
+            size = competition.size();
+            if (size == prevSize) {
+                break;
+            }
+            prevSize = size;
+            rounds += 1;
+        }
+        System.out.println(rounds);
+    }
+}

@@ -1,0 +1,83 @@
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main()
+{
+    long long numberElements, queries;
+    cin >> numberElements >> queries;
+    long long* allElements = new long long[numberElements];
+    for (int i = 0; i < numberElements; i++)
+    {
+        cin >> allElements[i];
+    }
+    vector<pair<long long, long long>> queriesPair;
+    for (long long i = 0; i < queries; i++)
+    {
+        long long sum , maxValue;
+        cin >> sum >> maxValue;
+        queriesPair.push_back(make_pair(sum, maxValue));
+    }
+
+    sort(allElements, allElements + numberElements);
+
+    for (long long i = 0; i < queries; i++)
+    {
+        long long sum = queriesPair[i].first;
+        long long maxValue = queriesPair[i].second;
+        int sumCount = 0;
+        for (int i = 0; i < numberElements; i++)
+        {
+            if (allElements[i] > maxValue)
+            {
+                if (i - 1 == -1)
+                {
+                    cout << 0 << endl;
+                    break;
+                }
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    
+                    if (sum - allElements[j] > 0)
+                    {
+                        sum = sum - allElements[j];
+                        sumCount++;
+                    }
+                    else if (sum - allElements[j] == 0)
+                    {
+                        sumCount++;
+                        break;
+                    }
+                    else break;
+                }
+                cout << sumCount << endl;
+                break;
+            }
+            else if (i == numberElements - 1)
+            {
+                for (int j = i ; j >= 0; j--)
+                {
+
+                    if (sum - allElements[j] > 0)
+                    {
+                        sum = sum - allElements[j];
+                        sumCount++;
+                    }
+                    else if (sum - allElements[j] == 0)
+                    {
+                        sumCount++;
+                        break;
+                    }
+                    else {
+                        cout << sumCount << endl;
+                        break;
+                    }
+
+                }
+                break;
+            }
+        }
+    }
+}

@@ -1,0 +1,79 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int main()
+{
+    long long number;
+    cin >> number;
+    stack<long long> leftToRight;
+    long long* list = new long long[number];
+    long long* result = new long long[number];
+    
+    for (int i = 0; i < number; i++) {
+        cin >> list[i];
+    }
+    int count = 0;
+    int maxList = 0;
+    for (int i = 0; i < number; i++) {
+        if (list[i] >= 0) {
+            leftToRight.push(list[i]);
+            if (leftToRight.top() > maxList)
+            {
+                maxList = leftToRight.top();
+            }
+        }
+        else if (list[i] < 0) {
+            if (-list[i] > maxList)
+            {
+                stack<long long> newStack;
+                leftToRight = newStack;
+                result[count] = list[i];
+                count++;
+                continue;
+            }
+            if (!leftToRight.empty()) {
+                while ((leftToRight.top() <= -list[i])) {
+                    if (leftToRight.top() < -list[i]) {
+                        leftToRight.pop();
+                        if (leftToRight.empty()) {
+                            result[count] = list[i];
+                            count++;
+                            break;
+                        }
+                    }
+                    else if (leftToRight.top() == -list[i]) {
+                        leftToRight.pop();
+                        break;
+                    }
+                }
+            }
+            else {
+                result[count] = list[i];
+                count++;
+            }
+
+        }
+    }
+    stack<long long> leftToRightReverse;
+    while (true)
+    {
+        if (leftToRight.empty())
+        {
+            break;
+        }
+        leftToRightReverse.push(leftToRight.top());
+        leftToRight.pop();
+    }
+    while (true) {
+        if (leftToRightReverse.empty()) {
+            break;
+        }
+        result[count] = leftToRightReverse.top();
+        leftToRightReverse.pop();
+        count++;
+    }
+    for (int i = 0; i < count; i++) {
+        cout << result[i] << " ";
+    }
+}

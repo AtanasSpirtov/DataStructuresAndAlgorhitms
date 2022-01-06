@@ -1,0 +1,73 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        long number = Integer.parseInt(scanner.nextLine());
+        Deque<Integer> leftToRight = new ArrayDeque<>();
+        List<Integer> list = new ArrayList<>();
+        int[] result = new int[(int) number];
+        if (number <= 0) {
+            System.exit(0);
+        }
+        for (int i = 0; i < number; i++) {
+            list.add(Integer.parseInt(scanner.nextLine()));
+        }
+        int count = 0;
+        int maxList = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) >= 0) {
+                leftToRight.push(list.get(i));
+                if(leftToRight.peek() > maxList)
+                {
+                    maxList = leftToRight.peek();
+                }
+            }
+            else if (list.get(i) < 0) {
+                if(-list.get(i) > maxList)
+                {
+                    leftToRight = new ArrayDeque<>();
+                    result[count] = list.get(i);
+                    count++;
+                    continue;
+                }
+                if (!leftToRight.isEmpty()) {
+                    while ((leftToRight.peek() <= -list.get(i))) {
+                        if (leftToRight.peek() < -list.get(i)) {
+                            leftToRight.pop();
+                            if (leftToRight.isEmpty()) {
+                                result[count] = list.get(i);
+                                count++;
+                                break;
+                            }
+                        }
+                        else if (leftToRight.peek() == -list.get(i)) {
+                            leftToRight.pop();
+                            break;
+                        }
+                    }
+                }
+                else {
+                    result[count] = list.get(i);
+                    count++;
+                }
+
+            }
+        }
+        while(true){
+            if (leftToRight.isEmpty()) {
+                break;
+            }
+            result[count] = leftToRight.pollLast();
+            count++;
+        }
+            for (int i = 0; i < count; i++) {
+                System.out.print(result[i] + " ");
+            }
+    }
+}

@@ -1,0 +1,46 @@
+
+import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+         Scanner scanner = new Scanner(System.in);
+         long n = scanner.nextLong();
+
+         long k = scanner.nextLong();
+
+         List<Long> list = new ArrayList<>();
+
+        Map<Long, Long> leftPart = new HashMap<>();
+
+        Map<Long, Long> rightPart = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            list.add(scanner.nextLong());
+        }
+
+
+        for (long animal : list) {
+            rightPart.put(animal, rightPart.getOrDefault(animal, 0L) + 1);
+        }
+
+        long count = 0;
+
+        for (long middleElement : list) {
+            long leftEl = 0;
+            long rightEl = 0;
+
+            rightPart.put(middleElement, rightPart.getOrDefault(middleElement, 0L) - 1);
+
+            if (leftPart.containsKey(middleElement / k) && middleElement % k == 0) {
+                leftEl = leftPart.get(middleElement / k);
+            }
+            if (rightPart.containsKey(middleElement * k)) {
+                rightEl = rightPart.get(middleElement * k);
+            }
+            count += leftEl * rightEl;
+
+            leftPart.put(middleElement, leftPart.getOrDefault(middleElement, 0L) + 1);
+        }
+        System.out.println(count);
+    }
+}

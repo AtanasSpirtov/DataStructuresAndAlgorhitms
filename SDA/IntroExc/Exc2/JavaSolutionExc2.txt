@@ -1,0 +1,58 @@
+import java.io.*;
+        import java.util.*;
+        import java.text.*;
+        import java.math.*;
+        import java.util.regex.*;
+
+        public class Solution {
+            public static void main(String args[] ) throws Exception {
+Scanner scanner = new Scanner(System.in);
+            int size = Integer.parseInt(scanner.nextLine());
+            int[] arr = new int[size];
+            for (int i = 0; i < size; i++) {
+                arr[i] = scanner.nextInt();
+            }
+            int missing = findMissing(arr);
+            System.out.println(missing);
+        }
+
+        private static int segregateNegativeNumsToTheLeft(int[] arr) {
+            int j = 0;
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] <= 0) {
+                    int temp;
+                    temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                    j++;
+                }
+            }
+            return j;
+        }
+
+
+        private static int findMissing(int[] arr) {
+            int shift = segregateNegativeNumsToTheLeft(arr);
+            int[] arr2 = new int[arr.length - shift];
+            int j = 0;
+            for (int i = shift; i < arr.length; i++) {
+                arr2[j] = arr[i];
+                j++;
+            }
+            return findMissingPositive(arr2);
+        }
+
+        private static int findMissingPositive(int[] arr) {
+            for (int i = 0; i < arr.length; i++) {
+                int x = Math.abs(arr[i]);
+                if (x - 1 < arr.length && arr[x - 1] > 0)
+                    arr[x - 1] = -arr[x - 1];
+            }
+
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] > 0){
+                    return i + 1;
+                }
+            }
+            return arr.length + 1;            }
+        }

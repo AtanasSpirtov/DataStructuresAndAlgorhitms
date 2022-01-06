@@ -1,0 +1,37 @@
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
+using namespace std;
+int main()
+{
+    int n;
+    cin >> n;
+    long long key;
+    long long value;
+    std::unordered_multiset<long long> foundKeys;
+
+    int brokenDoors = 0;
+    long* arrayche = new long[n];
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arrayche[i];
+    }
+    for (int i = 0; i < n; i++)
+    {
+        foundKeys.insert(arrayche[i]);
+        cin >> value;
+        bool is_in = foundKeys.find(value) == foundKeys.end();
+        if (is_in)
+        {
+            brokenDoors++;
+        }
+        else
+        {
+            auto keyToDelete = foundKeys.find(value);
+            foundKeys.erase(keyToDelete);
+        }
+    }
+    std::cout << brokenDoors;
+
+}

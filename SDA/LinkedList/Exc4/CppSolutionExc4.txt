@@ -1,0 +1,54 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <list>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h> 
+#include <iterator>
+#include <cstring>
+
+using namespace std;
+
+
+int main()
+{
+    unsigned long long queries;
+    cin >> queries;
+    list<long long> MitioLists;
+    string checkQuery;
+    unsigned long long listSize = 0;;
+    cin.ignore();
+    for (unsigned long long i = 0; i < queries; i++)
+    {
+        getline(cin, checkQuery);
+        if (checkQuery[0] == 'a')
+        {
+            checkQuery = checkQuery.substr(4);
+            int number = atoi(checkQuery.c_str());
+            MitioLists.push_back(number);
+            listSize++;
+        }
+        else if (checkQuery[0] == 'g')
+        {
+            MitioLists.pop_back();
+            listSize--;
+        }
+        else if (checkQuery[0] == 'm')
+        {
+            for (unsigned long long i = 0; i < listSize / 2; i++)
+            {
+                MitioLists.push_back(MitioLists.front());
+                MitioLists.pop_front();
+            }
+        }
+    }
+    cout << listSize << "\n";
+    for (unsigned long long i = 0; i < listSize; i++)
+    {
+        cout << MitioLists.front() << " ";
+        MitioLists.pop_front();
+    }
+}

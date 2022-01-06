@@ -1,0 +1,35 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    Deque<Long> numbers = new ArrayDeque<>();
+    long number = scanner.nextLong();
+    long subArrayLength = scanner.nextLong();
+    long[] arrayOfMins = new long[1000000];
+    long sum = 0;
+
+    for (int i = 0; i < subArrayLength - 1; i++) {
+        numbers.push(scanner.nextLong());
+    }
+    for (int i = (int) subArrayLength - 1; i < number; i++) {
+        numbers.push(scanner.nextLong());
+        if (numbers.size() == subArrayLength) {
+            long min = 1000000000;
+            for (long arrayOfMin : numbers) {
+                if (arrayOfMin < min) {
+                    min = arrayOfMin;
+                }
+            }
+            sum =sum+ min;
+            numbers.pollLast();
+        }
+    }
+    System.out.println(sum);
+}
+}
