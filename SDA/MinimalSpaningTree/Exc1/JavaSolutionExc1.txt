@@ -1,0 +1,91 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.LinkedList;
+
+public class Solution {
+    static class Graph {
+        private final int V;
+        private final LinkedList<Integer>[] adj;
+
+        Graph(int v) {
+            V = v;
+            adj = new LinkedList[v];
+            for (int i = 0; i < v; ++i)
+                adj[i] = new LinkedList();
+        }
+
+        void addEdge(int v, int w) {
+            adj[v].add(w);
+        }
+
+        Boolean isReachable(int s, int d) {
+            boolean[] visited = new boolean[V];
+
+            LinkedList<Integer> queue = new LinkedList<>();
+
+            visited[s] = true;
+            queue.add(s);
+
+            Iterator<Integer> i;
+            while (queue.size() != 0) {
+                s = queue.poll();
+
+                int n;
+                i = adj[s].listIterator();
+                while (i.hasNext()) {
+                    n = i.next();
+
+                    if (n == d)
+                        return true;
+
+                    if (!visited[n]) {
+                        visited[n] = true;
+                        queue.add(n);
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] line = reader.readLine().split(" ");
+        int nodes = Integer.parseInt(line[0]);
+        int edges = Integer.parseInt(line[1]);
+        Graph g = new Graph(nodes + 1);
+        for (int i = 0; i < edges; i++) {
+            String[] input = reader.readLine().split(" ");
+            int fir = Integer.parseInt(input[0]);
+            int sec = Integer.parseInt(input[1]);
+            g.addEdge(fir, sec);
+            g.addEdge(sec, fir);
+        }
+        int queries = Integer.parseInt(reader.readLine());
+        List<Integer> reachable = new ArrayList<>();
+        for (int i = 0; i < queries; i++) {
+            String[] queriesInput = reader.readLine().split(" ");
+            int queryType = Integer.parseInt(queriesInput[0]);
+            if (queryType == 1) {
+                if (g.isReachable(Integer.parseInt(queriesInput[1]), Integer.parseInt(queriesInput[2]))) {
+                    reachable.add( 1);
+                } else reachable.add(0);
+            } else if (queryType == 2) {
+                int fir = Integer.parseInt(queriesInput[1]);
+                int sec = Integer.parseInt(queriesInput[2]);
+                g.addEdge(fir, sec);
+                g.addEdge(sec , fir);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int j : reachable) {
+            if (j == 1) {
+                sb.append(1);
+            } else sb.append(0);
+        }
+        System.out.println(sb);
+    }
+}

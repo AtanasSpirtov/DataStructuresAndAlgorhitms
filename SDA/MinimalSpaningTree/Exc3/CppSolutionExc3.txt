@@ -1,0 +1,70 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+FILE* in;
+FILE* out;
+
+const int MAX_NODES = 1001;
+const int MAX_EDGES = 10001;
+const int MAX_OPTIMAL_SPEED = 30001;
+
+struct Edge {
+    int v1, v2, price;
+    bool operator < (const Edge& r) const {
+        return price != r.price ? price < r.price :
+            v1 != r.v1 ? v1 < r.v1 : v2 < r.v2;
+    }
+};
+
+int n, m;
+Edge a[MAX_EDGES];
+int parent[MAX_NODES];
+
+int getCompared(int node) {
+    if (parent[node] == node)
+        return node;
+    return parent[node] = getCompared(parent[node]);
+}
+
+void eval() {
+    int lower = 1, upper = MAX_OPTIMAL_SPEED;
+
+    sort(a, a + m);
+    for (int i = 0; i < m; i++) {
+        int numComps = n;
+        for (int i = 1; i <= n; i++)
+        {
+            parent[i] = i;
+        }
+        for (int c = i; c < m; c++) {
+            int comp1 = getCompared(a[c].v1);
+            int comp2 = getCompared(a[c].v2);
+            if (comp1 != comp2) {
+                parent[comp1] = comp2;
+                if (--numComps == 1) {
+                    if (a[c].price - a[i].price < upper - lower)
+                        lower = a[i].price, upper = a[c].price;
+                    break;
+                }
+            }
+        }
+        if (numComps > 1)
+        {
+            break;
+        }
+    }
+    fprintf(out, "%d %d\n", lower, upper);
+}
+
+int main(void) {
+    in = stdin; out = stdout;
+
+    fscanf(in, "%d %d", &n, &m);
+    for (int i = 0; i < m; i++)
+    {
+        fscanf(in, "%d %d %d", &a[i].v1, &a[i].v2, &a[i].price);
+    }
+    eval();
+}

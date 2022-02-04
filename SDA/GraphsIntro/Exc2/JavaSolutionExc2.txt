@@ -1,0 +1,75 @@
+
+import java.util.Scanner;
+
+class Solution {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int rows = scanner.nextInt();
+        int columns = scanner.nextInt();
+        int durations = scanner.nextInt();
+        int sickPeopleNumber = scanner.nextInt();
+        int[][] cinema = new int[rows][columns];
+        for (int i = 0; i < sickPeopleNumber; i++) {
+                int sickPeoplePosition1 = scanner.nextInt();
+                int sickPeoplePosition2 = scanner.nextInt();
+                cinema[sickPeoplePosition1 - 1][sickPeoplePosition2 - 1] = 1;
+        }
+//        for (int i = 0; i < rows; i++) {
+//            for (int j = 0; j < columns; j++) {
+//                System.out.print(cinema[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+//        System.out.println();
+        for (int z = 0; z < durations; z++) {
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
+                    if(cinema[i][j] == 1)
+                    {
+                        if(i + 1 < rows && cinema[i + 1][j] == 0)
+                        {
+                            cinema[i + 1][j] = 2;
+                        }
+                        if(i - 1 >= 0 && cinema[i - 1][j] == 0)
+                        {
+                            cinema[i - 1][j] = 2;
+                        }
+                        if(j + 1 < columns && cinema[i][j + 1] == 0)
+                        {
+                            cinema[i][j + 1] = 2;
+                        }
+                        if(j - 1 >= 0 && cinema[i][j - 1] == 0)
+                        {
+                            cinema[i][j - 1] = 2;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
+                    if(cinema[i][j] == 2)
+                    {
+                        cinema[i][j] = 1;
+                    }
+                }
+            }
+        }
+//        for (int i = 0; i < rows; i++) {
+//            for (int j = 0; j < columns; j++) {
+//                System.out.print(cinema[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+        int sum = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if(cinema[i][j] == 0)
+                {
+                    sum = sum + 1;
+                }
+            }
+        }
+        System.out.println(sum);
+    }
+}

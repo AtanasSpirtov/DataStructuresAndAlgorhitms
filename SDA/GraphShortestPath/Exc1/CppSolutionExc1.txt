@@ -1,0 +1,118 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+const int ETERNAL = 10000000;
+vector<vector<pair<int, int> > > g(ETERNAL);
+vector<int> dist(ETERNAL);
+vector<long> route(ETERNAL);
+
+void distinctPaths(int n, int m, int edges[][3]) {
+
+    priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > >pq;
+
+    for (int i = 0; i < m; ++i) {
+        int u = edges[i][0],
+            v = edges[i][1],
+            c = edges[i][2];
+        g[u].push_back({ v, c });
+    }
+
+    for (int i = 2; i <= n; ++i) {
+        dist[i] = ETERNAL;
+    }
+    pq.push({ 0, 1 });
+
+    dist[1] = 0;
+    route[1] = 1;
+
+    while (!pq.empty()) {
+        int d = pq.top().first;
+        int u = pq.top().second;
+        pq.pop();
+
+        if (d > dist[u]) {
+            continue;
+        }
+        for (auto e : g[u]) {
+            int v = e.first;
+            int c = e.second;
+            if (c + d > dist[v])
+                continue;
+
+            if (c + d == dist[v]) {
+                route[v] += route[u];
+            }
+
+            if (c + d < dist[v]) {
+                dist[v] = c + d;
+                route[v] = route[u];
+
+                pq.push({ dist[v], v });
+            }
+        }
+    }
+}
+
+void findShortest(int edges[][3], int n, int m, long paths)
+{
+    vector<vector<pair<int, int> > > g(n + 1);
+    for (int i = 0; i < m; i++) {
+
+        g[edges[i][0]].push_back({ edges[i][1], edges[i][2] });
+    }
+
+    vector<vector<int> > dis(n + 1, vector<int>(route[n], 1e9));
+
+    priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > >pq;
+    pq.push({ 0, 1 });
+    dis[1][0] = 0;
+
+    while (!pq.empty()) {
+        int u = pq.top().second;
+
+        int d = (pq.top().first);
+        pq.pop();
+        if (dis[u][route[n] - 1] < d)
+            continue;
+        vector<pair<int, int> > v = g[u];
+
+        for (int i = 0; i < v.size(); i++) {
+            if (d + v[i].second < dis[v[i].first][route[n] - 1]) {
+                dis[v[i].first][route[n] - 1] = d + v[i].second;
+
+                sort(dis[v[i].first].begin(), dis[v[i].first].end());
+
+                pq.push({ (d + v[i].second),  v[i].first });
+            }
+        }
+    }
+    if (paths > 100000000)
+    {
+        paths = paths - 100000000;
+    }
+    cout << dis[n][0] << " " << paths;
+}
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    auto edges = new int[m][3];
+
+    for (int i = 0; i < m; i++)
+    {
+        cin >> edges[i][0] >> edges[i][1] >> edges[i][2];
+    }
+    distinctPaths(n, m, edges);
+    if (route[n] == 0)
+    {
+        cout << -1 << " " << 0;
+    }
+    else {
+        findShortest(edges, n, m, route[n]);
+    }
+    return 0;
+}

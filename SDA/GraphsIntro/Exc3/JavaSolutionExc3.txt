@@ -1,0 +1,79 @@
+import java.util.*;
+
+class Solution {
+    public static Set<Integer> charactersInWords = new HashSet<>();
+
+    static class Graph {
+        private final LinkedList<Integer>[] adjacencyList;
+
+        Graph(int alphabetNumber) {
+            adjacencyList = new LinkedList[alphabetNumber];
+            for (int character = 0; character < alphabetNumber; character++) {
+                adjacencyList[character] = new LinkedList<>();
+            }
+        }
+
+        void addEdge(int first, int second) {
+            adjacencyList[first].add(second);
+        }
+
+        private int peeksNumbers() {
+            return adjacencyList.length;
+        }
+
+        private void graphCrawling(int currentVertex, boolean[] visited, Stack<Integer> stack) {
+            visited[currentVertex] = true;
+
+            for (int adjacentVertex : adjacencyList[currentVertex]) {
+                if (!visited[adjacentVertex]) {
+                    graphCrawling(adjacentVertex, visited, stack);
+                }
+            }
+            stack.push(currentVertex);
+        }
+
+        void alphabetSort() {
+            Stack<Integer> stack = new Stack<>();
+            boolean[] visited = new boolean[peeksNumbers()];
+            for (int i = 0; i < peeksNumbers(); i++) {
+                visited[i] = false;
+            }
+            for (int i = 0; i < peeksNumbers(); i++) {
+                if (!visited[i]) {
+                    graphCrawling(i, visited, stack);
+                }
+            }
+            while (!stack.isEmpty()) {
+                if (charactersInWords.contains(stack.peek())) {
+                    System.out.print((char) (97 + stack.pop()) + " ");
+                } else {
+                    stack.pop();
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int numberOfWords = Integer.parseInt(scanner.nextLine());
+        Graph graph = new Graph(26);
+        String[] words = new String[numberOfWords];
+        for (int i = 0; i < numberOfWords; i++) {
+            words[i] = scanner.nextLine();
+        }
+        for (int i = 0; i < numberOfWords; i++) {
+            for (int j = 0; j < words[i].length(); j++) {
+                charactersInWords.add(words[i].charAt(j) - 97);
+            }
+        }
+        for (int i = 0; i < numberOfWords - 1; i++) {
+            for (int j = 0; j < Math.min(words[i].length(), words[i + 1].length()); j++) {
+                if (words[i].charAt(j) != words[i + 1].charAt(j)) {
+                    graph.addEdge(words[i].charAt(j) - 97, words[i + 1].charAt(j) - 97);
+                    break;
+                }
+            }
+        }
+        graph.alphabetSort();
+    }
+}

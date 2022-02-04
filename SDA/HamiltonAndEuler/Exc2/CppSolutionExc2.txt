@@ -1,0 +1,93 @@
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <list>
+#include <algorithm>
+
+using namespace std;
+
+class Graph
+{
+public:
+    int V;
+    list<int>* adj;
+
+    vector<int> degree;
+
+    vector<int> rootForMinimumHeight();
+
+    Graph(int V)
+    {
+        this->V = V;
+        adj = new list<int>[V];
+        for (int i = 0; i < V; i++) {
+            degree.push_back(0);
+        }
+    }
+    void addEdge(int v, int w)
+    {
+        adj[v].push_back(w);
+        adj[w].push_back(v);
+        degree[v] = degree[v] + 1;
+        degree[w] = degree[w] + 1;
+    }
+
+    
+};
+
+vector<int> Graph::rootForMinimumHeight()
+{
+    queue<int> q;
+    vector<int> res;
+
+    for (int i = 0; i < V; i++) {
+        if (degree[i] == 1) {
+            q.push(i);
+        }
+    }
+    while (V > 2)
+    {
+        int deleteElement = q.size();
+        V = V - deleteElement;
+
+        for (int i = 0; i < deleteElement; i++)
+        {
+            int t = q.front();
+            q.pop();
+
+            for (auto j = adj[t].begin(); j != adj[t].end(); j++)
+            {
+                degree[*j]--;
+                if (degree[*j] == 1) {
+                    q.push(*j);
+                }
+            }
+        }
+    }
+    while (!q.empty())
+    {
+        res.push_back(q.front());
+        q.pop();
+    }
+    return res;
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    Graph g(n);
+    for (int i = 0; i < n - 1; i++)
+    {
+        int parent, child;
+        cin >> parent >> child;
+        g.addEdge(parent, child);
+    }
+
+    vector<int> res = g.rootForMinimumHeight();
+    sort(res.begin() , res.end());
+    for (int i = 0; i < res.size(); i++)
+        cout << res[i] << " ";
+    cout << endl;
+}

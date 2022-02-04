@@ -1,0 +1,79 @@
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.IntStream;
+
+class Graph {
+
+    private final int peeksNum;
+    private final List<List<Integer>> adj;
+
+    public Graph(int peeksNum) {
+        this.peeksNum = peeksNum;
+        adj = new ArrayList<>(peeksNum);
+
+        for (int i = 0; i < peeksNum; i++)
+            adj.add(new LinkedList<>());
+    }
+
+    private boolean isCyclicUtil(int i, boolean[] isVis, boolean[] stack) {
+        if (stack[i])
+            return true;
+
+        if (isVis[i]) {
+            return false;
+        }
+
+        isVis[i] = true;
+
+        stack[i] = true;
+        List<Integer> children = adj.get(i);
+
+        for (Integer c : children) {
+            if (isCyclicUtil(c, isVis, stack)) {
+                return true;
+            }
+        }
+
+        stack[i] = false;
+
+        return false;
+    }
+
+    boolean isCyclic() {
+
+        boolean[] visited = new boolean[peeksNum];
+        boolean[] recStack = new boolean[peeksNum];
+
+        return IntStream.range(0, peeksNum).anyMatch(i -> isCyclicUtil(i, visited, recStack));
+    }
+
+    void addEdge(int parent, int child) {
+        adj.get(parent).add(child);
+    }
+}
+
+class Solution {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        boolean[] result = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            int query = scanner.nextInt();
+            Graph graph = new Graph(1000000);
+            for (int j = 0; j < query; j++) {
+                graph.addEdge(scanner.nextInt(), scanner.nextInt());
+            }
+            boolean getResult = graph.isCyclic();
+            result[i] = getResult;
+        }
+        for (int i = 0; i < n; i++) {
+            if(result[i]) {
+                System.out.print(1 + " ");
+            }
+            else System.out.print(0 + " ");
+        }
+    }
+}

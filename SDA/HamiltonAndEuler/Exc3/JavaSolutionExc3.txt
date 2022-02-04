@@ -1,0 +1,106 @@
+
+import java.util.LinkedList;
+import java.util.Scanner;
+
+class Solution {
+    static class Graph {
+        private final int V;
+
+        private final LinkedList<Integer>[] adjList;
+
+        Graph(int v) {
+            V = v;
+            adjList = new LinkedList[v];
+            for (int i = 0; i < v; ++i)
+                adjList[i] = new LinkedList<>();
+        }
+
+        public void addEdge(int v, int w) {
+            adjList[v].add(w);
+            adjList[w].add(v);
+        }
+
+        private void DFSUtil(int v, boolean[] visited) {
+            visited[v] = true;
+            for (Integer n : adjList[v]) {
+                int i = n;
+                if (!visited[i]) {
+                    DFSUtil(i, visited);
+                }
+            }
+        }
+
+        boolean isConnected() {
+            boolean[] visited = new boolean[V];
+            int i = 0;
+            while (i < V) {
+                visited[i] = false;
+                i++;
+            }
+
+            i = 0;
+            while (i < V) {
+                if (adjList[i].size() != 0) {
+                    break;
+                }
+                i++;
+            }
+            if (i == V) {
+                return true;
+            }
+            DFSUtil(i, visited);
+
+            i = 0;
+            while (i < V) {
+                if (!visited[i] && adjList[i].size() > 0) {
+                    return false;
+                }
+                i++;
+            }
+
+            return true;
+        }
+
+        int isEuler() {
+            if (!isConnected()) {
+                return 0;
+            }
+            int resultSet = 0;
+            for (int i = 0; i < V; i++) {
+                if (adjList[i].size() % 2 != 0) {
+                    ++resultSet;
+                }
+            }
+
+            if (resultSet > 2) {
+                return 0;
+            }
+            return resultSet == 2 ? 1 : 2;
+        }
+
+        String result() {
+            int res = isEuler();
+            return switch (res) {
+                case 0 -> "none";
+                case 1 -> "epath";
+                default -> "ecycle";
+            };
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder builder = new StringBuilder();
+        int q = scanner.nextInt();
+        for (int i = 0; i < q; i++) {
+            int nodes = scanner.nextInt();
+            int edges = scanner.nextInt();
+            Graph g = new Graph(nodes + 1);
+            for (int j = 0; j < edges; j++) {
+                g.addEdge(scanner.nextInt(), scanner.nextInt());
+            }
+            builder.append(g.result()).append("\n");
+        }
+        System.out.println(builder);
+    }
+}
